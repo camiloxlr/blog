@@ -1,0 +1,13 @@
+.postTitle {
+    font-size: 20px;
+}
+
+#main-content {
+    width: 70% !important;
+}
+
+#go-to-post {
+    color: #000 !important;
+    text-decoration: none !important;
+    font-size: 20px;
+}
