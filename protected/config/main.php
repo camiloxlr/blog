@@ -8,7 +8,7 @@
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'Conexa Blog',
-
+	'defaultController' => 'post', 
 	// preloading 'log' component
 	'preload'=>array('log'),
 
@@ -32,6 +32,7 @@ return array(
 	'components'=>array(
 
 		'user'=>array(
+			'loginUrl'=>array('user/login'),
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 		),
@@ -86,7 +87,7 @@ return array(
 				'gii/<controller:\w+>'=>'gii/<controller>',
 				'gii/<controller:\w+>/<action:\w+>'=>'gii/<controller>/<action>',
 			),
-		)
+		),
 	),
 
 	// application-level parameters that can be accessed
