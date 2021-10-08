@@ -28,15 +28,19 @@ class PostController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','FilterByCategory'),
+				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update', 'comment'),
 				'users'=>array('@'),
 			),
+			array('allow', // allow only the owner to perform 'delete' actions
+                'actions' => array('delete'),
+                'expression' => array('PostController','allowOnlyOwner')
+            ),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array('admin'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -44,6 +48,20 @@ class PostController extends Controller
 			),
 		);
 	}
+
+	/**
+     * Allow only the owner to do the action
+     * @return boolean whether or not the user is the owner
+     */
+    public function allowOnlyOwner(){
+		var_dump($_GET);
+        /*if(Yii::app()->user->isAdmin){
+            return true;
+        }*/
+
+		//$post = Post::model()->findByPk($_GET["id"]); 
+		//return $post->user_id === Yii::app()->user->id;
+    }
 
 	/**
 	 * Displays a particular model.
@@ -57,6 +75,22 @@ class PostController extends Controller
 			'model'=>$this->loadModel($id),
 			'comments' => $this->getComments($id)
 		));
+	}
+
+	/**
+	 * Adiciona um comentário ao post.
+	 */
+	public function actionComment()
+	{
+		//var_dump($_POST);
+
+		$comment = new Comment();
+		$comment->content = $_POST['comment'];
+		$comment->post_id = $_POST['id'];
+		$comment->comment_user_id = 1; // aqui deveria ser o user logado
+		$comment->save();
+
+		$this->actionView($_POST['id']);
 	}
 
 	/**
@@ -104,8 +138,10 @@ class PostController extends Controller
 
 		if(isset($_POST['Post']))
 		{
-			var_dump(Yii::app()->user->getId());
-			$_POST['Post']['user_id'] = Yii::app()->user->id;
+			// var_dump(Yii::app()->user->getId());
+			// Yii::app()->user->id NAO RETORNA O USER CORRETAMENTE :(
+			
+			$_POST['Post']['user_id'] = 1;
 			$_POST['Post']['is_published'] = 1;
 
 			$model->attributes=$_POST['Post'];
@@ -149,6 +185,7 @@ class PostController extends Controller
 	 */
 	public function actionDelete($id)
 	{
+		var_dump($id);
 		$this->loadModel($id)->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
@@ -162,65 +199,53 @@ class PostController extends Controller
 	public function actionIndex()
 	{
 		$this->layout = 'app';
-		$dataProvider=new CActiveDataProvider('Post', array(
-			'criteria'=>array(
+
+		if(isset($_POST['id']))
+		{
+			$id = $_POST['id'];
+			$criteria=new CDbCriteria;
+			
+			$criteria->condition="is_published=1";	
+			
+			if (isset($id) && $id != 0){
+				$criteria->condition="is_published=1 and category_id=:category";	
+			}	
+
+			$criteria->params=array(':category'=>$id);
+			$criteria->with=array('user');
+
+			$criteria->order='t.created_at DESC';
+
+			/*
+			$criteria = array(
 				'condition'=>'is_published=1',
 				'order'=>'user.created_at DESC',
 				'with'=>array('user'),
-			),
-			'pagination'=>array(
-				'pageSize'=>2,
-			)
-		));
+			);
+			*/
+
+			$dataProvider=new CActiveDataProvider('Post', array(
+				'criteria'=>$criteria,
+				'pagination'=>array(
+					'pageSize'=>2,
+				)
+			));
+		} else {
+			$dataProvider=new CActiveDataProvider('Post', array(
+				'criteria'=>array(
+					'condition'=>'is_published=1',
+					'order'=>'user.created_at DESC',
+					'with'=>array('user'),
+				),
+				'pagination'=>array(
+					'pageSize'=>2,
+				)
+			));
+		}
 
 		$categories = Category::model()->findAll();
 
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-			'categories'=>$categories,
-		));
-	}
-
-	/**
-	 * Filtro por categoria
-	 */
-	public function actionFilterByCategory()
-	{
-		$this->layout = 'clean';
-
-		$id = $_POST['id'];
-
-		$criteria=new CDbCriteria;
-		
-		$criteria->condition="is_published=1";	
-		
-		if (isset($id) && $id != 0){
-			$criteria->condition="is_published=1 and category_id=:category";	
-		}	
-
-		$criteria->params=array(':category'=>$id);
-		$criteria->with=array('user');
-
-		$criteria->order='t.created_at DESC';
-
-		/*
-		$criteria = array(
-			'condition'=>'is_published=1',
-			'order'=>'user.created_at DESC',
-			'with'=>array('user'),
-		);
-		*/
-
-		$dataProvider=new CActiveDataProvider('Post', array(
-			'criteria'=>$criteria,
-			'pagination'=>array(
-				'pageSize'=>2,
-			)
-		));
-
-		$categories = Category::model()->findAll();
-
-		$this->render('list_posts',array(
 			'dataProvider'=>$dataProvider,
 			'categories'=>$categories,
 		));

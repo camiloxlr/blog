@@ -33,7 +33,7 @@ class Comment extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('post_id, comment_user_id, created_at, updated_at', 'required'),
+			array('post_id, comment_user_id, created_at', 'required'),
 			array('post_id, comment_user_id', 'numerical', 'integerOnly'=>true),
 			array('content', 'safe'),
 			// The following rule is used by search().

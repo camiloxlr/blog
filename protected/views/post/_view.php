@@ -12,7 +12,7 @@ $postUrl = Yii::app()->baseUrl.'/index.php/post/view/id/'.$data->id;
 		</div>
 
 		<div class="col-12">
-			<?php echo CHtml::encode($data->content, ['maxlength' => 2]); ?>
+			<?php echo mb_strimwidth($data->content, 0, 60, "...") ?>
 			<br />
 		</div>
 

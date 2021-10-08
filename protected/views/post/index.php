@@ -38,11 +38,14 @@ $this->breadcrumbs = array(
 		};
 		$.ajax({
 			type: 'POST',
-			url: '<?php echo Yii::app()->createAbsoluteUrl("post/FilterByCategory"); ?>',
+			url: '<?php echo Yii::app()->createAbsoluteUrl("post/index"); ?>',
 			data: data,
 			success: function(data) {
 				//alert(data);
-				$(".list-view").html(data);
+				document.open();
+                document.write(data);
+                document.close();
+				//$(".list-view").html(data);
 			},
 			error: function(data) { // if error occured
 				alert("Error occured.please try again");
