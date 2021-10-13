@@ -79,10 +79,10 @@ class UserController extends Controller
 			$model->attributes = $_POST['User'];
 			$model->save();
 			$identity = new UserIdentity($_POST['User']['email'], $_POST['User']['password']);
-			if ($identity->authenticate()) 
+			if ($identity->authenticate()){
 				Yii::app()->user->login($identity);
-
-			$this->redirect(array('post/index'));
+				$this->redirect(array('post/index'));
+			}
 		}
 
 		$this->render('create', array(

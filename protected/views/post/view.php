@@ -9,16 +9,21 @@ $this->breadcrumbs = array(
 ?>
 
 <div class="">
-		<?php if($model->user_id == Yii::app()->user->id): ?>
-			<button class="btn btn-sm btn-danger" style="float: right;" onclick="deleteArticle(<?php echo $model->id; ?>)" id="delete-post">Apagar</button>
-			<a href="<?php echo Yii::app()->createAbsoluteUrl("post/update", ['id' => $model->id]); ?>" class="btn btn-sm btn-secondary mr-2" style="float: right;" id="edit-post">Editar</a>
-		<?php endif; ?>
+	<div class="row">
+		<div class="col-12">
+			<?php if($model->user_id == Yii::app()->user->id): ?>
+				<button class="btn btn-sm btn-danger" style="float: right;" onclick="deleteArticle(<?php echo $model->id; ?>)" id="delete-post">Apagar</button>
+				<a href="<?php echo Yii::app()->createAbsoluteUrl("post/update", ['id' => $model->id]); ?>" class="btn btn-sm btn-secondary mr-2" style="float: right;" id="edit-post">Editar</a>
+			<?php endif; ?>
+		</div>
+	</div>
+		
 	<div class="row">
 		<div class="col-12 d-flex justify-content-center align-items-center">
 			<img id="post-image" src="<?=Yii::app()->request->baseUrl?>/images/<?php echo $model->image; ?>" alt="">
 		</div>
 	</div>
-	<h5 class="mt-5"><?php echo $model->title; ?></h5>
+	<h5 class="mt-2"><?php echo $model->title; ?></h5>
 
 	<p><?php echo $model->content; ?></p>
 	

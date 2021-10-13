@@ -55,7 +55,7 @@ class User extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => 'Nome',
-			'email' => 'Email',
+			'email' => 'E-mail',
 			'password' => 'Senha',
 			'description' => 'Descrição',
 			'created_at' => 'Created At',

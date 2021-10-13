@@ -137,15 +137,16 @@ class PostController extends Controller
 			$_POST['Post']['user_id'] = Yii::app()->user->id;
 			$_POST['Post']['is_published'] = 1;
 
-			$model->attributes=$_POST['Post'];
-
-			$model->save();
+			
 			if($model->image=CUploadedFile::getInstance($model,'image')) {
 				$extension = explode('/',$model->image->type)[1];
 				$model->image->saveAs(Yii::app()->basePath."/../images/".$model->id.".".$extension);
 				$model->image = $model->id.".".$extension;
 			}
-			
+
+			$_POST['Post']['image'] = $model->image;
+			$model->attributes=$_POST['Post'];
+
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -185,12 +186,11 @@ class PostController extends Controller
 				$model->image = $upload;
 				$extension = explode('/',$upload->type)[1];
 				$model->image->saveAs(Yii::app()->basePath."/../images/".$model->id.".".$extension);
+				$model->image = $model->id.".".$extension;
 				$image = $model->id.".".$extension;
 			}
 
 			$_POST['Post']['image'] = $image;
-			//var_dump($_POST);
-			//die();
 			$model->attributes=$_POST['Post'];
 
 			if($model->save())
