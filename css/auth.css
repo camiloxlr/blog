@@ -6,6 +6,14 @@ Html, body{
     height:100%;
 }
 
+body, .container {
+    background-color: #fff8fa !important;
+}
+
+.card {
+    background-color: #fffdff !important;
+}
+
 .formContent {
     width: 400px;
 }

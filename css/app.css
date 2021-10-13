@@ -1,3 +1,12 @@
+body, .container {
+    /*background-color: #fff0dd !important;*/
+    background-color: #fff8fa !important;
+}
+
+.articleItem {
+    background-color: #fffdff !important;
+}
+
 .postTitle {
     font-size: 20px;
 }
@@ -10,4 +19,14 @@
     color: #000 !important;
     text-decoration: none !important;
     font-size: 20px;
+}
+
+.breadcrumbs {
+    padding-left: 0px !important;
+}
+
+#post-image {
+    max-height: 400px;
+    height: 70%;
+    width: auto;
 }
