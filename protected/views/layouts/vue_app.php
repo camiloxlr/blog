@@ -77,7 +77,7 @@
             return {
                 name: 'Blog',
                 comments: [],
-                user: <?php echo Yii::app()->user->id; ?>
+                user: <?php echo Yii::app()->user->id ?? '0'; ?>
             };
         },
 
