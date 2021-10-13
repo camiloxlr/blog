@@ -30,3 +30,10 @@ body, .container {
     height: 70%;
     width: auto;
 }
+
+.postImage {
+    max-height: 150px;
+    max-width: 150px;
+    height: 70%;
+    width: auto;
+}

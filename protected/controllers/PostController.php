@@ -178,7 +178,7 @@ class PostController extends Controller
 
 			if ($upload) {
 				
-				if ($image) {
+				if ($image != null && $image != "") {
 					$rootPath = Yii::app()->getBasePath().'/..';
 					unlink($rootPath.'/images/'.$image);
 				}

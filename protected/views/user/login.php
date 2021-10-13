@@ -22,13 +22,13 @@
 					<h5 class="text-center mt-4 mb-4">Login</h5>
 					<div class="row">
 						<?php echo $form->labelEx($model, 'email'); ?>
-						<?php echo $form->textField($model, 'email', array('size' => 60, 'maxlength' => 255)); ?>
+						<?php echo $form->textField($model, 'email', array('size' => 60, 'maxlength' => 40)); ?>
 						<?php echo $form->error($model, 'email'); ?>
 					</div>
 
 					<div class="row">
 						<?php echo $form->labelEx($model, 'password'); ?>
-						<?php echo $form->passwordField($model, 'password', array('size' => 60, 'maxlength' => 255)); ?>
+						<?php echo $form->passwordField($model, 'password', array('size' => 60, 'maxlength' => 40)); ?>
 						<?php echo $form->error($model, 'password'); ?>
 					</div>
 
