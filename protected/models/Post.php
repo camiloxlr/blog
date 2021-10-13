@@ -40,7 +40,8 @@ class Post extends CActiveRecord
 		return array(
 			array('category_id, title, content', 'required'),
 			array('is_published, reading_time, category_id, user_id', 'numerical', 'integerOnly'=>true),
-			array('image', 'file', 'types'=>'gif, png, jpg, jpeg, bmp', 'maxSize'=>2097152,'allowEmpty'=>true),
+			array('image', 'file', 'types'=>'gif, png, jpg, jpeg, bmp','on'=>'insert'),
+			array('image', 'file', 'allowEmpty'=>true,'types'=>'gif, png, jpg, jpeg, bmp','on'=>'update', 'safe' => false),
 			array('title', 'length', 'max'=>40, 'min'=>3),
 			array('content', 'safe'),
 			// The following rule is used by search().

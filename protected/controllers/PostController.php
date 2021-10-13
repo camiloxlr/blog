@@ -166,15 +166,14 @@ class PostController extends Controller
 
 		$model=$this->loadModel($id);
 
+		$image = $model->image;
+
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if (isset($_POST['Post']))
 		{
-			$image = $model->image;
 			$upload = CUploadedFile::getInstance($model,'image');
-			$model->attributes=$_POST['Post'];
-			$model->save();
 
 			if ($upload) {
 				
@@ -184,10 +183,15 @@ class PostController extends Controller
 				}
 
 				$model->image = $upload;
-				$extension = explode('/',$model->image->type)[1];
+				$extension = explode('/',$upload->type)[1];
 				$model->image->saveAs(Yii::app()->basePath."/../images/".$model->id.".".$extension);
-				$model->image = $model->id.".".$extension;
+				$image = $model->id.".".$extension;
 			}
+
+			$_POST['Post']['image'] = $image;
+			//var_dump($_POST);
+			//die();
+			$model->attributes=$_POST['Post'];
 
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
