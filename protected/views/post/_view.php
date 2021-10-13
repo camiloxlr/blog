@@ -4,7 +4,7 @@
 $postUrl = Yii::app()->baseUrl.'/index.php/post/view/id/'.$data->id;
 ?>
 
-<div class="card px-2 mt-3" onclick="location.href='<?php echo $postUrl ?>';" style="cursor:pointer;">
+<div class="card articleItem px-2 mt-3" onclick="openArticle(<?php echo $data->id; ?>)" style="cursor:pointer;">
 	<div class="row">
 		<div class="col-12 mt-2">
 			<span class="postTitle"><?php echo CHtml::encode($data->title); ?></span>

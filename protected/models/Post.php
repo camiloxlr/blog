@@ -6,6 +6,7 @@
  * The followings are the available columns in table 'post':
  * @property integer $id
  * @property string $title
+ * @property string $image
  * @property string $content
  * @property integer $is_published
  * @property integer $reading_time
@@ -39,7 +40,8 @@ class Post extends CActiveRecord
 		return array(
 			array('category_id, title, content', 'required'),
 			array('is_published, reading_time, category_id, user_id', 'numerical', 'integerOnly'=>true),
-			array('title', 'length', 'max'=>255),
+			array('image', 'file', 'types'=>'gif, png, jpg, jpeg, bmp', 'maxSize'=>2097152,'allowEmpty'=>true),
+			array('title', 'length', 'max'=>40, 'min'=>3),
 			array('content', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -68,6 +70,7 @@ class Post extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'title' => 'Título',
+			'image' => 'Imagem',
 			'content' => 'Conteúdo',
 			'is_published' => 'Is Published',
 			'reading_time' => 'Tempo de Leitura',

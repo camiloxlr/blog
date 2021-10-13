@@ -53,14 +53,14 @@ class PostController extends Controller
      * Allow only the owner to do the action
      * @return boolean whether or not the user is the owner
      */
-    public function allowOnlyOwner(){
-		var_dump($_GET);
-        /*if(Yii::app()->user->isAdmin){
-            return true;
-        }*/
+    public function allowOnlyOwner()
+	{
+		$_POST = json_decode(file_get_contents("php://input"), true);
 
-		//$post = Post::model()->findByPk($_GET["id"]); 
-		//return $post->user_id === Yii::app()->user->id;
+
+		$post = Post::model()->findByPk($_POST["id"]); 
+		return $post->user_id == Yii::app()->user->id;
+		
     }
 
 	/**
@@ -69,7 +69,7 @@ class PostController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->layout = 'app';
+		$this->layout = 'vue_app';
 
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
@@ -82,13 +82,17 @@ class PostController extends Controller
 	 */
 	public function actionComment()
 	{
-		//var_dump($_POST);
-
 		$comment = new Comment();
+
 		$comment->content = $_POST['comment'];
 		$comment->post_id = $_POST['id'];
-		$comment->comment_user_id = 1; // aqui deveria ser o user logado
-		$comment->save();
+		$comment->comment_user_id = Yii::app()->user->id;
+		$comment->created_at = date('Y-m-d H:i:s');
+
+		if($comment->validate())
+   			$comment->save();
+		else
+			var_dump($comment->getErrors());
 
 		$this->actionView($_POST['id']);
 	}
@@ -109,6 +113,7 @@ class PostController extends Controller
 		return Comment::model()->with('commentUser')->findAll(array(
 			'select'=>'content',
 			'condition'=>'post_id=:id',
+			'order'=>'t.created_at DESC',
 			'params'=>array(':id'=>$id),
 		));
 
@@ -123,28 +128,24 @@ class PostController extends Controller
 		$model=new Post;
 
 		$this->layout = 'auth';
-		/*
-		if(Yii::app()->user->isGuest) {
-			print("Not logged");
-		} else {
-			print("Welcome ".Yii::app()->user->name);
-			print("Your id is ".Yii::app()->user->id);
-		
-		}
-		*/
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['Post']))
 		{
-			// var_dump(Yii::app()->user->getId());
-			// Yii::app()->user->id NAO RETORNA O USER CORRETAMENTE :(
-			
-			$_POST['Post']['user_id'] = 1;
+			$_POST['Post']['user_id'] = Yii::app()->user->id;
 			$_POST['Post']['is_published'] = 1;
 
 			$model->attributes=$_POST['Post'];
+
+			$model->save();
+			if($model->image=CUploadedFile::getInstance($model,'image')) {
+				$extension = explode('/',$model->image->type)[1];
+				$model->image->saveAs(Yii::app()->basePath."/../images/".$model->id.".".$extension);
+				$model->image = $model->id.".".$extension;
+			}
+			
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -161,14 +162,33 @@ class PostController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
+		$this->layout = 'auth';
+
 		$model=$this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Post']))
+		if (isset($_POST['Post']))
 		{
+			$image = $model->image;
+			$upload = CUploadedFile::getInstance($model,'image');
 			$model->attributes=$_POST['Post'];
+			$model->save();
+
+			if ($upload) {
+				
+				if ($image) {
+					$rootPath = Yii::app()->getBasePath().'/..';
+					unlink($rootPath.'/images/'.$image);
+				}
+
+				$model->image = $upload;
+				$extension = explode('/',$model->image->type)[1];
+				$model->image->saveAs(Yii::app()->basePath."/../images/".$model->id.".".$extension);
+				$model->image = $model->id.".".$extension;
+			}
+
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -183,14 +203,18 @@ class PostController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id)
+	public function actionDelete()
 	{
-		var_dump($id);
+		$id = $_POST['id'];
+		$model = $this->loadModel($id);
 		$this->loadModel($id)->delete();
+		
+		if ($model->image != null && $model->image != "") {
+			$rootPath = Yii::app()->getBasePath().'/..';
+			unlink($rootPath.'/images/'.$model->image);
+		}
 
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		$this->sendResponse(200, $body = 'Deletado.', $contentType = 'application/json');
 	}
 
 	/**
@@ -198,7 +222,10 @@ class PostController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$this->layout = 'app';
+		$this->layout = 'vue_app';
+
+		//var_dump($_POST);
+		//die();
 
 		if(isset($_POST['id']))
 		{
@@ -234,7 +261,7 @@ class PostController extends Controller
 			$dataProvider=new CActiveDataProvider('Post', array(
 				'criteria'=>array(
 					'condition'=>'is_published=1',
-					'order'=>'user.created_at DESC',
+					'order'=>'t.created_at DESC',
 					'with'=>array('user'),
 				),
 				'pagination'=>array(

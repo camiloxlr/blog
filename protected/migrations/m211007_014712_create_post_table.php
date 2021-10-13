@@ -7,6 +7,7 @@ class m211007_014712_create_post_table extends CDbMigration
         $this->createTable('post', array(
             'id' => 'int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY',
             'title' => 'string',
+            'image' => 'string',
             'content' => 'text',
             'is_published' => 'tinyint NOT NULL DEFAULT 0',
             'reading_time' => 'int',
@@ -23,6 +24,7 @@ class m211007_014712_create_post_table extends CDbMigration
 		$this->insert('post', [
             'id' => 1,
             'title' => 'Nova integração com o banco Inter!',
+            'image' => 'think.png',
 			'content' => 'A mais recente novidade da conexa é a integração com o banco inter...',
             'is_published' => 1,
             'reading_time' => 3,
@@ -36,6 +38,7 @@ class m211007_014712_create_post_table extends CDbMigration
 		$this->insert('post', [
             'id' => 2,
             'title' => 'Nova integração com a pagar.me!',
+            'image' => 'think.png',
 			'content' => 'A mais recente novidade da conexa é a integração com a pagar.me...',
             'is_published' => 1,
             'reading_time' => 2,
@@ -49,6 +52,7 @@ class m211007_014712_create_post_table extends CDbMigration
 		$this->insert('post', [
             'id' => 3,
             'title' => 'Novo extrato de recorrências do Financeiro!',
+            'image' => 'think.png',
 			'content' => 'A mais recente novidade da conexa é o novo extrato de recorrências do financeiro...',
             'is_published' => 1,
             'reading_time' => 5,

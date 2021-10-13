@@ -29,30 +29,11 @@ $this->breadcrumbs = array(
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider' => $dataProvider,
 	'itemView' => '_view',
+	'pager' => array(
+		'nextPageLabel' => 'Próximo',
+		'prevPageLabel' => 'Anterior',
+		'firstPageLabel' => 'Primeiro',
+		'lastPageLabel' => 'Último'
+		),
+   
 )); ?>
-
-<script>
-	$('#category').change(function() {
-		let data = {
-			'id': $('#category').val()
-		};
-		$.ajax({
-			type: 'POST',
-			url: '<?php echo Yii::app()->createAbsoluteUrl("post/index"); ?>',
-			data: data,
-			success: function(data) {
-				//alert(data);
-				document.open();
-                document.write(data);
-                document.close();
-				//$(".list-view").html(data);
-			},
-			error: function(data) { // if error occured
-				alert("Error occured.please try again");
-				alert(data);
-			},
-
-			dataType: 'html'
-		});
-	});
-</script>
