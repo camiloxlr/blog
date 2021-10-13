@@ -20,4 +20,23 @@ class Controller extends CController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+		
+	/**
+	 * Send raw HTTP response
+	 * @param int $status HTTP status code
+	 * @param string $body The body of the HTTP response
+	 * @param string $contentType Header content-type
+	 * @return HTTP response 
+	 */
+	protected function sendResponse($status = 200, $body = '', $contentType = 'application/json')
+	{
+		// Set the status
+		$statusHeader = 'HTTP/1.1 ' . $status;
+		header($statusHeader);
+		// Set the content type
+		header('Content-type: ' . $contentType);
+	 
+		echo $body;
+		Yii::app()->end();
+	}
 }

@@ -53,6 +53,8 @@ class UserIdentity extends CUserIdentity
 			$this->errorCode = self::ERROR_NONE;
 
 			$this->_id = $users->id;
+
+			$this->setState('name', $users->name);
 		}
 
 		return !$this->errorCode;
