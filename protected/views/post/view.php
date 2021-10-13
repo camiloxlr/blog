@@ -24,6 +24,7 @@ $this->breadcrumbs = array(
 		</div>
 	</div>
 	<h5 class="mt-2"><?php echo $model->title; ?></h5>
+	<h6>Autor: <?php echo CHtml::encode($model->user->name); ?></h6>
 
 	<p><?php echo $model->content; ?></p>
 	

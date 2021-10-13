@@ -151,7 +151,8 @@ class CommentController extends Controller
 		foreach ($comments as $comment) {
 			$commentArr[] = [
 				'name' => $comment->commentUser->name,
-				'content' => $comment->content
+				'content' => $comment->content,
+				'date' => $comment->created_at,
 			];
 		}
 		

@@ -17,33 +17,37 @@
 
 	<?php echo $form->errorSummary($model); ?>
 
-	<div class="row">
-		<div class="col-12">
-			<h6>Cadastro de Usuário</h6>
-
+	<div class="card signup_v4 mb-30">
+		<div class="card-body">
 			<div class="row">
-				<?php echo $form->labelEx($model, 'name'); ?>
-				<?php echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 40)); ?>
-				<?php echo $form->error($model, 'name'); ?>
-			</div>
+				<div class="col-12">
+					<h6 class="text-center mt-4 mb-4">Cadastro de Usuário</h6>
 
-			<div class="row">
-				<?php echo $form->labelEx($model, 'email'); ?>
-				<?php echo $form->textField($model, 'email', array('size' => 60, 'maxlength' => 40)); ?>
-				<?php echo $form->error($model, 'email'); ?>
-			</div>
+					<div class="row">
+						<?php echo $form->labelEx($model, 'name'); ?>
+						<?php echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 40)); ?>
+						<?php echo $form->error($model, 'name'); ?>
+					</div>
 
-			<div class="row">
-				<?php echo $form->labelEx($model, 'password'); ?>
-				<?php echo $form->passwordField($model, 'password', array('size' => 60, 'maxlength' => 40)); ?>
-				<?php echo $form->error($model, 'password'); ?>
-			</div>
+					<div class="row">
+						<?php echo $form->labelEx($model, 'email'); ?>
+						<?php echo $form->textField($model, 'email', array('size' => 60, 'maxlength' => 40)); ?>
+						<?php echo $form->error($model, 'email'); ?>
+					</div>
 
-			<div class="row buttons">
-				<div class="col-12 px-0 d-flex justify-content-between align-items-center">
-					<a href="<?php echo Yii::app()->baseUrl.'/index.php/user/login' ?>" class="btn btn-sm btn-secondary">Voltar</a>
-					<button type="button" class="btn btn-primary d-none" id="create-user">Cadastrar</button>
-					<?php echo CHtml::submitButton($model->isNewRecord ? 'Cadastrar' : 'Save'); ?>
+					<div class="row">
+						<?php echo $form->labelEx($model, 'password'); ?>
+						<?php echo $form->passwordField($model, 'password', array('size' => 60, 'maxlength' => 40)); ?>
+						<?php echo $form->error($model, 'password'); ?>
+					</div>
+
+					<div class="row buttons">
+						<div class="col-12 px-0 d-flex justify-content-between align-items-center">
+							<a href="<?php echo Yii::app()->baseUrl.'/index.php/user/login' ?>" class="btn btn-sm btn-secondary">Voltar</a>
+							<button type="button" class="btn btn-primary d-none" id="create-user">Cadastrar</button>
+							<?php echo CHtml::submitButton($model->isNewRecord ? 'Cadastrar' : 'Save'); ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

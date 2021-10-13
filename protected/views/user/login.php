@@ -19,7 +19,7 @@
 		<div class="card-body">
 			<div class="row">
 				<div class="col-12">
-					<h5 class="text-center mt-4 mb-4">Login</h5>
+					<h6 class="text-center mt-4 mb-4">Login</h6>
 					<div class="row">
 						<?php echo $form->labelEx($model, 'email'); ?>
 						<?php echo $form->textField($model, 'email', array('size' => 60, 'maxlength' => 40)); ?>
