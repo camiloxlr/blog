@@ -41,10 +41,12 @@ $this->breadcrumbs = array(
 
 	<h6 class="mt-3 mb-2">Comentários</h6>
 	<div class="row">
-		<div class="col-12 mt-1" v-for="comment in comments">
-			<span>{{comment.name}}</span>
-			<br>
+		<div class="col-12 mt-1 pt-1" style="border-top: 1px solid #f0f3f5;" v-for="comment in comments">
+			<span>{{comment.name}}</span>: 
 			<span>{{comment.content}}</span>
+			<br>
+			<span style="font-size: 10px; color: grey;" class="ml-2">{{comment.date}}</span>
+			<button class="btn btn-sm btn-danger" style="float: right;" v-if="comment.owner" v-on:click="deleteComment(comment.id, comment.post)">Apagar</button>
 		</div>
 	</div>
 </div>

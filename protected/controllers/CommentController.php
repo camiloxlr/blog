@@ -39,8 +39,13 @@ class CommentController extends Controller
 			),
 			array(
 				'allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions' => array('admin', 'delete'),
+				'actions' => array('admin'),
 				'users' => array('admin'),
+			),
+			array(
+				'allow', // allow only the owner to perform 'delete' actions
+				'actions' => array('delete'),
+				'expression' => array('CommentController', 'allowOnlyOwner')
 			),
 			array(
 				'deny',  // deny all users
@@ -112,13 +117,14 @@ class CommentController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id)
+	public function actionDelete()
 	{
+
+		$id = $_POST['id'];
+		$model = $this->loadModel($id);
 		$this->loadModel($id)->delete();
 
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if (!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		$this->sendResponse(200, $body = 'Deletado.', $contentType = 'application/json');
 	}
 
 	/**
@@ -138,27 +144,42 @@ class CommentController extends Controller
 	public function actionPostComments($id)
 	{
 		$comments = Comment::model()->with(array(
-			'commentUser'=>array(
-				'select'=>'id, name',
-			)))
+			'commentUser' => array(
+				'select' => 'id, name',
+			)
+		))
 			->findAll(array(
-			'condition' => 't.post_id=:id',
-			'order' => 't.created_at DESC',
-			'params' => array(':id' => $id)
-		));
+				'condition' => 't.post_id=:id',
+				'order' => 't.created_at DESC',
+				'params' => array(':id' => $id)
+			));
 
 		$commentArr = [];
 		foreach ($comments as $comment) {
 			$commentArr[] = [
 				'name' => $comment->commentUser->name,
+				'id' => $comment->id,
 				'content' => $comment->content,
 				'date' => $comment->created_at,
+				'post' => $comment->post_id,
+				'owner' => $comment->commentUser->id == Yii::app()->user->id,
 			];
 		}
-		
+
 		$this->renderJSON($commentArr);
 	}
 
+	/**
+	 * Allow only the owner to do the action
+	 * @return boolean whether or not the user is the owner
+	 */
+	public function allowOnlyOwner()
+	{
+		$_POST = json_decode(file_get_contents("php://input"), true);
+
+		$comment = Comment::model()->findByPk($_POST["id"]);
+		return $comment->comment_user_id == Yii::app()->user->id;
+	}
 
 	/**
 	 * Manages all models.

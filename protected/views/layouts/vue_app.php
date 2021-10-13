@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/app.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.css">
-    <link rel="shortcut icon" type="image/jpg" href="<?php echo Yii::app()->request->baseUrl; ?>/images/conexa.jpeg"/>
+    <link rel="shortcut icon" type="image/jpg" href="<?php echo Yii::app()->request->baseUrl; ?>/images/conexa.jpeg" />
 
     <script src="https://use.fontawesome.com/935025f712.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"></script>
@@ -69,8 +69,6 @@
 </html>
 
 <script type="application/javascript">
-    console.log('oi')
-
     var app = new Vue({
 
         'el': '#main',
@@ -78,7 +76,8 @@
         'data': function() {
             return {
                 name: 'Blog',
-                comments: []
+                comments: [],
+                user: <?php echo Yii::app()->user->id; ?>
             };
         },
 
@@ -130,10 +129,12 @@
                     })
                     .catch(error => console.error(error));
             },
-            // Add um comentário a um artigo
+            // Deleta um artigo
             deleteArticle: function(id) {
 
-                let data = {'id': id};
+                let data = {
+                    'id': id
+                };
                 console.log(data);
                 axios.post('<?php echo Yii::app()->createAbsoluteUrl("post/delete"); ?>', data)
                     .then(response => {
@@ -141,6 +142,20 @@
                         setTimeout(function() {
                             location.href = '<?php echo Yii::app()->createAbsoluteUrl("post/index"); ?>'
                         }, 2000);
+                    })
+                    .catch(error => console.error(error));
+            },
+            // Deleta um comentário
+            deleteComment: function(id, post) {
+
+                let data = {
+                    'id': id
+                };
+                console.log(data);
+                axios.post('<?php echo Yii::app()->createAbsoluteUrl("comment/delete"); ?>', data)
+                    .then(response => {
+                        showAlert("Sucesso.", "Comentário deletado.");
+                        this.loadComments(post)
                     })
                     .catch(error => console.error(error));
             },
